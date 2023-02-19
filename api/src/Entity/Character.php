@@ -19,7 +19,7 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
-#[ORM\Table(name: 'bbone_characters')]
+#[ORM\Table(name: '`bbone_characters`')]
 #[ORM\Entity(repositoryClass: CharacterRepository::class)]
 #[ApiResource(
     description: 'Each validated character can played in the game.',
