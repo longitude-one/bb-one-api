@@ -44,8 +44,14 @@ use Symfony\Component\Validator\Constraints as Assert;
 ```
 ## 4. Add some fixtures
 
+If fixtures isn't yet created, create it:
 ```shell
 docker compose exec php bin/console make:fixtures
+```
+
+Then create a factory for the entity:
+```shell
+docker compose exec php bin/console make:factory
 ```
 
 Update the created factory to configure data.

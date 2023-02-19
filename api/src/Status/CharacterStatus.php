@@ -27,6 +27,17 @@ class CharacterStatus
     public const ACTION_UNBAN = 'unban';
     public const ACTION_VALIDATE = 'validate';
 
+    public const STATUS = [
+        self::STATUS_ABORTED,
+        self::STATUS_ARCHIVED,
+        self::STATUS_ASSIGNED,
+        self::STATUS_BANNED,
+        self::STATUS_DRAFT,
+        self::STATUS_PUBLISHED,
+        self::STATUS_REJECTED,
+        self::STATUS_SUBMITTED,
+    ];
+
     public const STATUS_ABORTED = 'aborted';
     public const STATUS_ARCHIVED = 'archived';
     public const STATUS_ASSIGNED = 'assigned';

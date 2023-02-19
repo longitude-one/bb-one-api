@@ -45,11 +45,15 @@ class Character implements MetaDataInterface
     #[Groups(['character:read', 'character:draft'])]
     private ?string $name = null;
 
+    #[ORM\ManyToOne(inversedBy: 'characters')]
+    #[Groups(['character:read', 'character:draft'])]
+    private ?User $owner = null;
+
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     #[Groups(['character:read', 'character:draft'])]
     private ?string $pitch = null;
 
-    #[ORM\Column(type: Types::SMALLINT)]
+    #[ORM\Column(type: Types::STRING, length: 15)]
     #[Groups(['character:read'])]
     private string $status = CharacterStatus::STATUS_DRAFT;
 
@@ -87,6 +91,11 @@ class Character implements MetaDataInterface
         return $this->name;
     }
 
+    public function getOwner(): ?User
+    {
+        return $this->owner;
+    }
+
     public function getPitch(): ?string
     {
         return $this->pitch;
@@ -119,6 +128,13 @@ class Character implements MetaDataInterface
     public function setName(string $name): self
     {
         $this->name = $name;
+
+        return $this;
+    }
+
+    public function setOwner(?User $owner): self
+    {
+        $this->owner = $owner;
 
         return $this;
     }
