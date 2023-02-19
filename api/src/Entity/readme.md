@@ -19,3 +19,16 @@ Table name should respect the following rules:
 #[ORM\Table(name: 'bbone_characters')]
 ```
 
+## 4. Add some fixtures
+
+```shell
+docker compose exec php bin/console make:fixtures
+```
+
+Update the created factory to configure data.
+Add a line in the AppFixtures class to load and call the new factory.
+Then load data
+
+```shell
+docker compose exec php bin/console doctrine:fixtures:load --no-interaction
+```
