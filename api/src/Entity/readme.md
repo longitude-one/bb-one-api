@@ -19,6 +19,29 @@ Table name should respect the following rules:
 #[ORM\Table(name: 'bbone_characters')]
 ```
 
+## 4. Complete the Validation Entity
+
+### 4.1. Add the unique constraints
+
+```php
+Add one unique constraint foreach unique property. 
+Don't forget that the above line should be added to the class not the property.
+
+```php
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+
+#[UniqueEntity(fields: ['username'], message: 'There is already an user with this username')]
+```
+
+### 4.2. Add the validation constraints
+
+Add the validation constraints for each property.
+
+```php
+use Symfony\Component\Validator\Constraints as Assert;
+
+#[Assert\NotBlank]
+```
 ## 4. Add some fixtures
 
 ```shell
