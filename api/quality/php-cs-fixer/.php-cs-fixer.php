@@ -3,15 +3,16 @@
 $header = file_get_contents(__DIR__ . '/headers.txt');
 $header = str_replace("%year%", date('Y'), $header);
 
+
 $finder = PhpCsFixer\Finder::create()
     ->in([
-        __DIR__ . '/../../../api/bin',
-        __DIR__ . '/../../../api/config',
-        __DIR__ . '/../../../api/migrations',
-        __DIR__ . '/../../../api/public',
-        __DIR__ . '/../../../api/quality',
-        __DIR__ . '/../../../api/src',
-        __DIR__ . '/../../../api/tests',
+        __DIR__ . '/../../bin',
+        __DIR__ . '/../../config',
+        __DIR__ . '/../../migrations',
+        __DIR__ . '/../../public',
+        __DIR__ . '/../../quality',
+        __DIR__ . '/../../src',
+        __DIR__ . '/../../tests',
     ])
 ;
 
@@ -38,5 +39,5 @@ return $config->setRules([
     ],
     ])
     ->setFinder($finder)
-    ->setCacheFile(__DIR__ . '/../../../api/var/quality/tmp-phpcs/.php_cs.cache')
+    //->setCacheFile(__DIR__ . '/../../var/cache/quality/tmp-phpcs/.php_cs.cache')
 ;

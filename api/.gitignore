@@ -1,4 +1,5 @@
 /docker/db/data
+quality/**/vendor/
 
 ###> symfony/framework-bundle ###
 /.env.local

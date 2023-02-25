@@ -1,10 +1,12 @@
 
-How to run PhpStan:
+How to install then run PhpStan:
 ```shell
-docker run --init -it --rm -v "$(pwd):/project" -v "$(pwd)/api/var/quality/tmp-phpqa:/tmp" -w /project longitudeone/phpqa:latest phpstan analyse --configuration=api/quality/php-stan/php-stan.neon --level=9
+docker compose exec php sh -c 'composer update --working-dir=quality/php-stan'
+docker compose exec php sh -c 'PHP_CS_FIXER_IGNORE_ENV=1 php quality/php-cs-fixer/vendor/bin/php-cs-fixer fix --config=quality/php-cs-fixer/.php-cs-fixer.php --allow-risky=yes'
 ```
 
-How to run PHP CS Fixer:
+How to install then run PHP CS Fixer:
 ```shell
-docker run --init -it --rm -v "$(pwd):/project" -v "$(pwd)/api/var/quality/tmp-phpcs:/tmp" -w /project jakzal/phpqa:php8.1-alpine php-cs-fixer fix --config=api/quality/php-cs-fixer/.php-cs-fixer.php --allow-risky=yes
+docker compose exec php sh -c 'composer update --working-dir=quality/php-cs-fixer'
+docker compose exec php sh -c 'php quality/php-cs-fixer/vendor/bin/php-cs-fixer fix --config=quality/php-cs-fixer/.php-cs-fixer.php --allow-risky=yes'
 ```
