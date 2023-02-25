@@ -36,7 +36,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(mappedBy: 'owner', targetEntity: Character::class)]
     private Collection $characters;
     #[ORM\Column(length: 180, unique: true)]
-    #[Groups(['user:read', 'user:write'])]
+    #[Groups(['admin:read', 'admin:write', 'owner:read'])]
     #[Assert\NotBlank]
     #[Assert\Email]
     private ?string $email = null;
@@ -47,17 +47,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?int $id = null;
 
     /**
-     * @var string The hashed password
+     * @var ?string The hashed password
      */
     #[ORM\Column]
-    #[Groups(['user:write'])]
+    #[Groups(['owner:write'])]
     private ?string $password = null;
 
     #[ORM\Column]
     private array $roles = [];
 
     #[ORM\Column(length: 255, unique: true)]
-    #[Groups(['character:read', 'user:read', 'user:write'])]
+    #[Groups(['character:read', 'user:read', 'owner:write', 'admin:write'])]
     #[Assert\NotBlank]
     private ?string $username = null;
 
