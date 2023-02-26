@@ -13,10 +13,24 @@
 namespace App\Tests\Api;
 
 use ApiPlatform\Symfony\Bundle\Test\ApiTestCase;
+use ApiPlatform\Symfony\Bundle\Test\Client;
 use Symfony\Contracts\HttpClient\ResponseInterface;
 
 class UserTest extends ApiTestCase
 {
+    private Client $client;
+
+    public function setUp(): void
+    {
+        parent::setUp();
+        $this->client = static::createClient();
+        $this->client->setDefaultOptions([
+            'headers' => [
+                'Content-Type' => 'application/ld+json',
+            ],
+        ]);
+    }
+
     private static function assertHydraCollectionContainsKeys(array $keys, ResponseInterface $response): void
     {
         self::assertJsonContains([
@@ -47,10 +61,24 @@ class UserTest extends ApiTestCase
 
     public function testGetUsers(): void
     {
-        $response = static::createClient()->request('GET', '/users');
+        $response = $this->client->request('GET', '/users', [
+            'headers' => ['Content-Type' => 'application/ld+json'],
+        ]);
 
         self::assertResponseIsSuccessful();
         self::assertHydraCollectionContainsKeys(['@id', '@type', 'username'], $response);
         self::assertHydraCollectionNotContainsKeys(['email', 'password', 'plainPassword'], $response);
+    }
+
+    public function testLoginWithInvalidCredentials(): void
+    {
+        $this->client->request('POST', '/login', [
+            'json' => [
+                'email' => 'foo@example.com',
+                'password' => 'foo',
+            ],
+        ]);
+
+        self::assertResponseStatusCodeSame(401, 'Invalid credentials.');
     }
 }
