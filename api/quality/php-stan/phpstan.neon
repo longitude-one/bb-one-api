@@ -25,7 +25,6 @@ parameters:
 		- ../../bin
 		- ../../migrations
 		- ../../public
-		- ../../quality
 		- ../../src
 		- ../../templates
 		- ../../tests
