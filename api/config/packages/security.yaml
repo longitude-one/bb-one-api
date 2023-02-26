@@ -16,6 +16,15 @@ security:
         main:
             lazy: true
             provider: app_user_provider
+            json_login:
+                check_path: /api/login_check
+                # Remove the default success handler suggested by Copilot
+#                success_handler: lexik_jwt_authentication.handler.authentication_success
+#                failure_handler: lexik_jwt_authentication.handler.authentication_failure
+                username_path: email
+                password_path: password
+            logout:
+                path: /api/logout
 
             # activate different ways to authenticate
             # https://symfony.com/doc/current/security.html#the-firewall

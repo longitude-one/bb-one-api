@@ -26,8 +26,8 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: '`bbone_users`')]
 #[ApiResource(
-    normalizationContext: ['groups' => []], // If line is removed, all properties are serialized
-    denormalizationContext: ['groups' => []], // If line is removed, all properties are serialized
+    normalizationContext: ['groups' => []], // With this line, by default, no properties are serialized.
+    denormalizationContext: ['groups' => []], // With this line, by default, no properties are deserialized.
 )]
 #[UniqueEntity(fields: ['email'], message: 'There is already an account with this email')]
 #[UniqueEntity(fields: ['username'], message: 'There is already an user with this username')]
