@@ -26,8 +26,8 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: '`bbone_users`')]
 #[ApiResource(
-    normalizationContext: ['groups' => ['user:read']],
-    denormalizationContext: ['groups' => ['user:write']],
+    normalizationContext: ['groups' => []], // If line is removed, all properties are serialized
+    denormalizationContext: ['groups' => []], // If line is removed, all properties are serialized
 )]
 #[UniqueEntity(fields: ['email'], message: 'There is already an account with this email')]
 #[UniqueEntity(fields: ['username'], message: 'There is already an user with this username')]
@@ -35,6 +35,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\OneToMany(mappedBy: 'owner', targetEntity: Character::class)]
     private Collection $characters;
+
     #[ORM\Column(length: 180, unique: true)]
     #[Groups(['admin:read', 'admin:write', 'owner:read'])]
     #[Assert\NotBlank]
@@ -50,7 +51,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @var ?string The hashed password
      */
     #[ORM\Column]
-    #[Groups(['owner:write'])]
     private ?string $password = null;
 
     #[ORM\Column]
