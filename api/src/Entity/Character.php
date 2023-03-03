@@ -36,6 +36,7 @@ class Character implements MetaDataInterface
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     #[Groups(['character:read', 'character:draft'])]
     private ?string $description = null;
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -83,7 +84,7 @@ class Character implements MetaDataInterface
 
     public function getLabel(): string
     {
-        return $this->getName();
+        return $this->getName() ?? '';
     }
 
     public function getName(): ?string

@@ -47,6 +47,9 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[UniqueEntity(fields: ['username'], message: 'There is already an user with this username')]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
+    /**
+     * @var ArrayCollection<int, Character>
+     */
     #[ORM\OneToMany(mappedBy: 'owner', targetEntity: Character::class)]
     private Collection $characters;
 
@@ -67,7 +70,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private ?string $password = null;
 
-    #[ORM\Column]
+    /**
+     * @var array<string>
+     */
+    /**
+     * @var array<string>
+     */
     private array $roles = [];
 
     #[ORM\Column(length: 255, unique: true)]
@@ -93,7 +101,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @see UserInterface
      */
-    public function eraseCredentials()
+    public function eraseCredentials(): void
     {
         // If you store any temporary, sensitive data on the user, clear it here
         // $this->plainPassword = null;
@@ -122,7 +130,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     public function getPassword(): string
     {
-        return $this->password;
+        return $this->password ?? '';
     }
 
     /**
@@ -178,6 +186,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
+    /**
+     * @param array<string> $roles
+     */
     public function setRoles(array $roles): self
     {
         $this->roles = $roles;

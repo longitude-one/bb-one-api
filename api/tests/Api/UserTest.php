@@ -39,6 +39,9 @@ class UserTest extends ApiTestCase
 
         $hydraMembers = $response->toArray()['hydra:member'];
         $firstMember = array_shift($hydraMembers);
+        if (null === $firstMember) {
+            self::fail('The collection is empty! Did you forget to load initial data fixtures? Try to launch `php bin/console doctrine:fixtures:load --env=test`');
+        }
 
         foreach ($keys as $key) {
             self::assertArrayHasKey($key, $firstMember);

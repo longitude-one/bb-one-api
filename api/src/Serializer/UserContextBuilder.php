@@ -31,7 +31,10 @@ class UserContextBuilder implements SerializerContextBuilderInterface
     }
 
     /**
-     * {@inheritDoc}
+     * @param Request $request
+     * @param bool $normalization
+     * @param array|null $extractedAttributes
+     * @return array<string, array<string, string>>
      */
     public function createFromRequest(Request $request, bool $normalization, array $extractedAttributes = null): array
     {
