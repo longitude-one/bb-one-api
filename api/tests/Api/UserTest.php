@@ -29,11 +29,6 @@ class UserTest extends ApiTestCase
     {
         parent::setUp();
         $this->client = static::createClient();
-        $this->client->setDefaultOptions([
-            'headers' => [
-                'Content-Type' => 'application/ld+json',
-            ],
-        ]);
     }
 
     /**
@@ -93,7 +88,11 @@ class UserTest extends ApiTestCase
 
     public function testLoginWithInvalidCredentials(): void
     {
-        $this->client->request('POST', '/login', [
+        $this->client->request('POST', '/auth', [
+            'headers' => [
+                'Content-Type' => 'application/json',
+                'accept' => 'application/json',
+            ],
             'json' => [
                 'email' => 'foo@example.com',
                 'password' => 'foo',
@@ -105,14 +104,19 @@ class UserTest extends ApiTestCase
 
     public function testLoginWithValidCredentials(): void
     {
-        $response = $this->client->request('POST', '/login', [
+        $response = $this->client->request('POST', '/auth', [
+            'headers' => [
+                'Content-Type' => 'application/json',
+                'accept' => 'application/json',
+            ],
             'json' => [
                 'email' => 'user@example.org',
                 'password' => 'password',
             ],
         ]);
 
-
         self::assertResponseIsSuccessful();
+        self::assertArrayHasKey('token', $response->toArray());
+        self::assertIsString($response->toArray()['token']);
     }
 }
