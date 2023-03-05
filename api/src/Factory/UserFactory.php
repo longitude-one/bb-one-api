@@ -89,4 +89,27 @@ final class UserFactory extends ModelFactory
             })
         ;
     }
+
+    /**
+     * @return User[]|Proxy[]
+     */
+    public static function createTestUsers(): array
+    {
+        //Default user
+        $users[]= self::createOne([
+            'email' => 'user@example.org',
+            'password' => 'password',
+            'username' => 'DefaultUser',
+        ]);
+
+        // Admin user
+        $users[]= self::createOne([
+            'email' => 'admin@example.org',
+            'password' => 'password',
+            'username' => 'DefaultAdmin',
+            'roles' => ['ROLE_ADMIN'],
+        ]);
+
+        return $users;
+    }
 }

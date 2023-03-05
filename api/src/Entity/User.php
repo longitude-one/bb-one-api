@@ -73,10 +73,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @var array<string>
      */
-    /**
-     * @var array<string>
-     */
-    private array $roles = [];
+    #[ORM\Column]
+    private array $roles = ['ROLE_USER'];
 
     #[ORM\Column(length: 255, unique: true)]
     #[Groups(['character:read', 'user:read', 'owner:write', 'admin:write'])]
@@ -142,7 +140,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         // guarantee every user at least has ROLE_USER
         $roles[] = 'ROLE_USER';
 
-        return array_unique($roles);
+        //necessary to avoid a bug with reflection
+        $this->roles = array_unique($roles);
+
+        return $this->roles;
     }
 
     /**

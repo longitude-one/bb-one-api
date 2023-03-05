@@ -14,6 +14,11 @@ namespace App\Tests\Api;
 
 use ApiPlatform\Symfony\Bundle\Test\ApiTestCase;
 use ApiPlatform\Symfony\Bundle\Test\Client;
+use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
+use Symfony\Contracts\HttpClient\Exception\DecodingExceptionInterface;
+use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
+use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
+use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 use Symfony\Contracts\HttpClient\ResponseInterface;
 
 class UserTest extends ApiTestCase
@@ -31,11 +36,16 @@ class UserTest extends ApiTestCase
         ]);
     }
 
-    private static function assertHydraCollectionContainsKeys(array $keys, ResponseInterface $response): void
+    /**
+     * @throws \Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface
+     * @throws \Symfony\Contracts\HttpClient\Exception\DecodingExceptionInterface
+     * @throws \Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface
+     * @throws \Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface
+     * @throws \Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface
+     */
+    private static function assertHydraCollectionContainsKeysInMember(array $keys, ResponseInterface $response): void
     {
-        self::assertJsonContains([
-            '@type' => 'hydra:Collection',
-        ]);
+        self::assertJsonContains(['@type' => 'hydra:Collection']);
 
         $hydraMembers = $response->toArray()['hydra:member'];
         $firstMember = array_shift($hydraMembers);
@@ -48,11 +58,16 @@ class UserTest extends ApiTestCase
         }
     }
 
-    private static function assertHydraCollectionNotContainsKeys(array $keys, ResponseInterface $response): void
+    /**
+     * @throws \Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface
+     * @throws \Symfony\Contracts\HttpClient\Exception\DecodingExceptionInterface
+     * @throws \Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface
+     * @throws \Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface
+     * @throws \Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface
+     */
+    private static function assertHydraCollectionNotContainsKeysInMember(array $keys, ResponseInterface $response): void
     {
-        self::assertJsonContains([
-            '@type' => 'hydra:Collection',
-        ]);
+        self::assertJsonContains(['@type' => 'hydra:Collection']);
 
         $hydraMembers = $response->toArray()['hydra:member'];
         $firstMember = array_shift($hydraMembers);
@@ -64,13 +79,16 @@ class UserTest extends ApiTestCase
 
     public function testGetUsers(): void
     {
-        $response = $this->client->request('GET', '/users', [
-            'headers' => ['Content-Type' => 'application/ld+json'],
-        ]);
-
-        self::assertResponseIsSuccessful();
-        self::assertHydraCollectionContainsKeys(['@id', '@type', 'username'], $response);
-        self::assertHydraCollectionNotContainsKeys(['email', 'password', 'plainPassword'], $response);
+        try {
+            $response = $this->client->request('GET', '/users', [
+                'headers' => ['Content-Type' => 'application/ld+json'],
+            ]);
+            self::assertResponseIsSuccessful();
+            self::assertHydraCollectionContainsKeysInMember(['@id', '@type', 'username'], $response);
+            self::assertHydraCollectionNotContainsKeysInMember(['email', 'password', 'plainPassword'], $response);
+        } catch (ClientExceptionInterface|DecodingExceptionInterface|RedirectionExceptionInterface|ServerExceptionInterface|TransportExceptionInterface $e) {
+            self::fail($e->getMessage());
+        }
     }
 
     public function testLoginWithInvalidCredentials(): void
@@ -83,5 +101,18 @@ class UserTest extends ApiTestCase
         ]);
 
         self::assertResponseStatusCodeSame(401, 'Invalid credentials.');
+    }
+
+    public function testLoginWithValidCredentials(): void
+    {
+        $response = $this->client->request('POST', '/login', [
+            'json' => [
+                'email' => 'user@example.org',
+                'password' => 'password',
+            ],
+        ]);
+
+
+        self::assertResponseIsSuccessful();
     }
 }
